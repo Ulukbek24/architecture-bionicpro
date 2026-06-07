@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="bionicpro-architecture" version="22.0.0">
+  <diagram id="task3" name="Task3-S3-CDN-Nginx">
+    <mxGraphModel dx="1422" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Задание 3. Снижение нагрузки на БД: S3 (MinIO) + Nginx CDN/reverse-proxy" style="text;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="client" value="Клиент (браузер, моб. приложение)" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx" value="Nginx (edge)&#10;- reverse-proxy для /auth, /api&#10;- /cdn/* кэширует артефакты S3 (proxy_cache_path)&#10;- статика SPA" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="200" width="260" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="bff" value="Session Backend (BFF)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="170" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="reports-api&#10;генерирует артефакт,&#10;upload в S3, отдаёт presigned + CDN URL" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="260" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="MinIO / S3&#10;bucket: bionic-reports" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="980" y="240" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="db" value="Postgres (OLTP)&#10;хранит только ключи объектов" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="980" y="380" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="HTTP/1.1" style="endArrow=classic;html=1;" edge="1" parent="1" source="client" target="nginx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="/auth, /api" style="endArrow=classic;html=1;" edge="1" parent="1" source="nginx" target="bff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="/reports" style="endArrow=classic;html=1;" edge="1" parent="1" source="bff" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="PUT artifact" style="endArrow=classic;html=1;" edge="1" parent="1" source="api" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="/cdn/* (cached)" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1" source="nginx" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="references only" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1" source="api" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

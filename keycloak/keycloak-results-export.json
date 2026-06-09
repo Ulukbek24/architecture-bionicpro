@@ -1,4 +1,5 @@
 {
+  "id": "reports-realm",
   "realm": "reports-realm",
   "enabled": true,
   "sslRequired": "none",
@@ -13,123 +14,79 @@
   "ssoSessionMaxLifespan": 36000,
   "roles": {
     "realm": [
-      {
-        "name": "user",
-        "description": "Regular user role"
-      },
-      {
-        "name": "administrator",
-        "description": "Administrator role"
-      },
-      {
-        "name": "prothetic_user",
-        "description": "Prothetic user role with report access"
-      }
+      { "id": "r-user",          "name": "user",           "description": "Regular user role" },
+      { "id": "r-administrator", "name": "administrator",  "description": "Administrator role" },
+      { "id": "r-prothetic",     "name": "prothetic_user", "description": "Prothetic user role with report access" }
     ]
   },
   "users": [
     {
+      "id": "u-user1",
       "username": "user1",
       "enabled": true,
       "email": "user1@example.com",
       "firstName": "User",
       "lastName": "One",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "password123",
-          "temporary": false
-        }
-      ],
+      "credentials": [{ "type": "password", "value": "password123", "temporary": false }],
       "realmRoles": ["user"]
     },
     {
+      "id": "u-user2",
       "username": "user2",
       "enabled": true,
       "email": "user2@example.com",
       "firstName": "User",
       "lastName": "Two",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "password123",
-          "temporary": false
-        }
-      ],
+      "credentials": [{ "type": "password", "value": "password123", "temporary": false }],
       "realmRoles": ["user"]
     },
     {
+      "id": "u-admin1",
       "username": "admin1",
       "enabled": true,
       "email": "admin1@example.com",
       "firstName": "Admin",
       "lastName": "One",
-      "credentials": [
-        {
-          "type": "password",
-          "value": "admin123",
-          "temporary": false
-        }
-      ],
+      "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
       "realmRoles": ["administrator"]
     },
     {
+      "id": "u-prothetic1",
       "username": "prothetic1",
       "enabled": true,
       "email": "prothetic1@example.com",
       "firstName": "Prothetic",
       "lastName": "One",
-      "attributes": {
-        "prosthetic_ids": ["P-1001", "P-1002"]
-      },
-      "credentials": [
-        {
-          "type": "password",
-          "value": "prothetic123",
-          "temporary": false
-        }
-      ],
+      "attributes": { "prosthetic_ids": ["P-1001", "P-1002"] },
+      "credentials": [{ "type": "password", "value": "prothetic123", "temporary": false }],
       "realmRoles": ["prothetic_user"]
     },
     {
+      "id": "u-prothetic2",
       "username": "prothetic2",
       "enabled": true,
       "email": "prothetic2@example.com",
       "firstName": "Prothetic",
       "lastName": "Two",
-      "attributes": {
-        "prosthetic_ids": ["P-2001"]
-      },
-      "credentials": [
-        {
-          "type": "password",
-          "value": "prothetic123",
-          "temporary": false
-        }
-      ],
+      "attributes": { "prosthetic_ids": ["P-2001"] },
+      "credentials": [{ "type": "password", "value": "prothetic123", "temporary": false }],
       "realmRoles": ["prothetic_user"]
     },
     {
+      "id": "u-prothetic3",
       "username": "prothetic3",
       "enabled": true,
       "email": "prothetic3@example.com",
       "firstName": "Prothetic",
       "lastName": "Three",
-      "attributes": {
-        "prosthetic_ids": ["P-3001", "P-3002", "P-3003"]
-      },
-      "credentials": [
-        {
-          "type": "password",
-          "value": "prothetic123",
-          "temporary": false
-        }
-      ],
+      "attributes": { "prosthetic_ids": ["P-3001", "P-3002", "P-3003"] },
+      "credentials": [{ "type": "password", "value": "prothetic123", "temporary": false }],
       "realmRoles": ["prothetic_user"]
     }
   ],
   "clients": [
     {
+      "id": "c-reports-frontend",
       "clientId": "reports-frontend",
       "enabled": true,
       "publicClient": false,
@@ -150,10 +107,10 @@
       },
       "protocolMappers": [
         {
+          "id": "pm-prosthetic-ids",
           "name": "prosthetic_ids",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-attribute-mapper",
-          "consentRequired": false,
           "config": {
             "user.attribute": "prosthetic_ids",
             "claim.name": "prosthetic_ids",
@@ -167,6 +124,7 @@
       ]
     },
     {
+      "id": "c-reports-api",
       "clientId": "reports-api",
       "enabled": true,
       "clientAuthenticatorType": "client-secret",

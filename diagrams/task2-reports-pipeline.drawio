@@ -1,0 +1,46 @@
+<mxfile host="app.diagrams.net" agent="bionicpro-architecture" version="22.0.0">
+  <diagram id="task2" name="Task2-Reports">
+    <mxGraphModel dx="1422" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Задание 2. Сервис отчётов (Airflow ETL → ClickHouse → reports-api)" style="text;fontSize=18;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="900" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="crm" value="CRM DB&#10;(OLTP, Postgres/Oracle)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="airflow" value="Apache Airflow&#10;DAG crm_to_clickhouse_daily&#10;extract → load → aggregate" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="200" width="240" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ch" value="ClickHouse (OLAP)&#10;bionic.prosthetic_events (MergeTree)&#10;bionic.usage_daily (SummingMergeTree)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="580" y="220" width="220" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="api" value="reports-api (FastAPI)&#10;- Bearer JWT (Keycloak JWKS)&#10;- RBAC по ролям + prosthetic_ids&#10;- читает ClickHouse&#10;- кладёт артефакт в S3" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;html=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="200" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="bff" value="Session Backend (BFF)&#10;использует cookie-сессию&#10;и проксирует /reports" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="210" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fe" value="Frontend&#10;Android-app / Web SPA" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="360" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="JDBC SELECT" style="endArrow=classic;html=1;" edge="1" parent="1" source="crm" target="airflow">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="INSERT + agg" style="endArrow=classic;html=1;" edge="1" parent="1" source="airflow" target="ch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="SELECT" style="endArrow=classic;html=1;" edge="1" parent="1" source="api" target="ch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="Bearer token" style="endArrow=classic;html=1;" edge="1" parent="1" source="bff" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="cookie" style="endArrow=classic;html=1;" edge="1" parent="1" source="fe" target="bff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

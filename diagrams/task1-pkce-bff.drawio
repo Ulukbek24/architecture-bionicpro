@@ -1,0 +1,71 @@
+<mxfile host="app.diagrams.net" agent="bionicpro-architecture" version="22.0.0">
+  <diagram id="task1" name="Task1-PKCE-BFF">
+    <mxGraphModel dx="1422" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Задание 1. PKCE + BFF + Яндекс ID" style="text;fontSize=20;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="500" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="Пилот / Покупатель&#10;(браузер)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="200" width="40" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" value="Frontend (React SPA)&#10;только cookie-сессия, токены не видит" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="180" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bff" value="Session Backend (BFF, FastAPI)&#10;- инициирует PKCE Code Grant&#10;- хранит access/refresh-токены на сервере&#10;- выдаёт HttpOnly cookie сессии&#10;- проксирует /reports в reports-api" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="160" width="320" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="keycloak" value="Keycloak (IdP)&#10;realm: reports-realm&#10;client: reports-frontend (PKCE S256, confidential)" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="160" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="yandex" value="Yandex ID&#10;(OIDC Identity Provider, federated)" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="300" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="reportsapi" value="reports-api&#10;валидирует Bearer JWT, выдаёт отчёты" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="380" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="endArrow=classic;html=1;" edge="1" parent="1" source="user" target="frontend">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="1. /auth/login (cookie)" style="endArrow=classic;html=1;" edge="1" parent="1" source="frontend" target="bff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="2. redirect c PKCE+state" style="endArrow=classic;html=1;" edge="1" parent="1" source="bff" target="keycloak">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="3. federated login" style="endArrow=classic;html=1;dashed=1;" edge="1" parent="1" source="keycloak" target="yandex">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="4. /auth/callback?code=…" style="endArrow=classic;html=1;" edge="1" parent="1" source="keycloak" target="bff">
+          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="5. token exchange + verifier" style="endArrow=classic;html=1;" edge="1" parent="1" source="bff" target="keycloak">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" value="6. GET /reports (cookie)" style="endArrow=classic;html=1;" edge="1" parent="1" source="frontend" target="bff">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="7. Bearer access_token" style="endArrow=classic;html=1;" edge="1" parent="1" source="bff" target="reportsapi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="PKCE S256: code_verifier хранится только в BFF.&#10;Frontend никогда не получает access_token и refresh_token —&#10;закрывает класс уязвимостей, через которые произошёл взлом." style="shape=callout;fillColor=#fff2cc;strokeColor=#d6b656;html=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="480" width="500" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
